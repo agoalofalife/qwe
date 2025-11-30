@@ -8,6 +8,7 @@ import (
 
 	cm "github.com/mainak55512/qwe/commit"
 	"github.com/mainak55512/qwe/diff"
+	"github.com/mainak55512/qwe/display"
 	in "github.com/mainak55512/qwe/initializer"
 	er "github.com/mainak55512/qwe/qwerror"
 	rb "github.com/mainak55512/qwe/rebase"
@@ -72,6 +73,7 @@ func helpText() {
 	fmt.Println()
 	fmt.Println("[COMMANDS]:")
 	fmt.Fprintln(w, "qwe init\t[Initialize qwe in present directory]")
+	fmt.Fprintln(w, "qwe files\t[Show have already been tracking files]")
 	fmt.Fprintln(w, "qwe group-init <group name>\t[Initialize a group to track multiple files]")
 	fmt.Fprintln(w, "qwe groups\t[Get list of all groups tracked in the repository]")
 	fmt.Fprintln(w, "qwe groups <file-path>\t[Get list of all groups in which a file is tracked]")
@@ -110,9 +112,19 @@ func HandleArgs() error {
 		case "init":
 			{
 				if len(command_list) != 1 {
-					return er.CLIInitErr
+					return er.CLIShowFilesErr
 				}
 				if err := in.Init(); err != nil {
+					return err
+				}
+			}
+		case "files":
+			{
+				if len(command_list) != 1 {
+					return er.CLIInitErr
+				}
+
+				if err := display.PrintTrackedFiles(); err != nil {
 					return err
 				}
 			}

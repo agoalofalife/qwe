@@ -3,11 +3,12 @@ package initializer
 import (
 	"encoding/json"
 	"fmt"
+	"os"
+	"time"
+
 	er "github.com/mainak55512/qwe/qwerror"
 	utl "github.com/mainak55512/qwe/qweutils"
 	tr "github.com/mainak55512/qwe/tracker"
-	"os"
-	"time"
 )
 
 // Initiates qwe repository
@@ -49,9 +50,7 @@ func Init() error {
 // Initiate a group in a qwe repository
 func GroupInit(groupName string) error {
 
-	qwePath := ".qwe"
-
-	if exists := utl.FolderExists(qwePath); !exists {
+	if !utl.QweIsInWorkingDir() {
 		return er.RepoNotFound
 	}
 

@@ -28,6 +28,17 @@ type Tracker struct {
 	Versions []VersionDetails `json:"versions"`
 }
 
+func (tr *Tracker) CommitsCount() int {
+	return len(tr.Versions)
+}
+
+func (tr *Tracker) LastVersion() *VersionDetails {
+	if len(tr.Versions) == 0 {
+		return nil
+	}
+	return &tr.Versions[len(tr.Versions)-1]
+}
+
 type FileDetails struct {
 	FileName     string `json:"file_name"`
 	CommitNumber int    `json:"commit_number"`

@@ -50,6 +50,15 @@ func FolderExists(path string) bool {
 	return false
 }
 
+func QweIsInWorkingDir() bool {
+	qwePath := ".qwe"
+
+	if exists := FolderExists(qwePath); !exists {
+		return false
+	}
+	return true
+}
+
 // Check if a file exists
 func FileExists(filePath string) bool {
 	_, err := os.Stat(filePath)

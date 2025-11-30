@@ -60,4 +60,5 @@ var (
 	NoFileOrDiff       = new(39, "File does not exist or no changes found with the previous commit!")
 	GrpNameListErr     = new(40, "groups command takes no argument or filepath as the only argument!")
 	BinFileErr         = new(41, "Filetype is not supported yet!")
+	CLIShowFilesErr    = new(42, "files command doesn't take any argument!")
 )
