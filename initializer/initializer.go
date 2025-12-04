@@ -42,6 +42,10 @@ func Init() error {
 		if err := tr.SaveTracker(1, []byte("{}")); err != nil {
 			return err
 		}
+
+		if err := tr.InitTrackedFiles(); err != nil {
+			return err
+		}
 	}
 	fmt.Println("QWE initiated")
 	return nil
@@ -55,7 +59,7 @@ func GroupInit(groupName string) error {
 	}
 
 	// Get group tracker
-	_, groupTracker, err := tr.GetTracker(1)
+	_, groupTracker, err := tr.GetTracker(tr.GroupTrackerType)
 	if err != nil {
 		return err
 	}

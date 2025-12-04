@@ -24,7 +24,7 @@ import (
 func CommitUnit(filePath, message string) (string, int, error) {
 
 	// Get tracking details from _tracker.qwe
-	tracker, _, err := tr.GetTracker(0)
+	tracker, _, err := tr.GetTracker(tr.FileTrackerType)
 	if err != nil {
 		return "", -3, err
 	}
@@ -65,7 +65,7 @@ func CommitUnit(filePath, message string) (string, int, error) {
 
 			// Reconstruct the file to the latest committed version
 			// by applying all the changes to the base version
-			if err = res.Reconstruct(val, target, -1); err != nil {
+			if err = res.Reconstruct(val, target, res.LastVersion); err != nil {
 				return "", -3, err // -3 means unsuccessful
 			}
 
@@ -98,6 +98,7 @@ func CommitUnit(filePath, message string) (string, int, error) {
 					if strings.HasPrefix(val.Current, "_base_") && len(val.Versions) == 0 {
 						return val.Base, -2, er.NoFileOrDiff
 					}
+					// todo improve user experience and say what accurately happened
 					return val.Versions[len(val.Versions)-1].UID, len(val.Versions) - 1, er.NoFileOrDiff
 				}
 			}
@@ -161,7 +162,7 @@ func CommitUnit(filePath, message string) (string, int, error) {
 func CommitGroup(groupName, commitMessage string) error {
 
 	// Get group tracker
-	_, groupTracker, err := tr.GetTracker(1)
+	_, groupTracker, err := tr.GetTracker(tr.GroupTrackerType)
 	if err != nil {
 		return err
 	}
@@ -236,7 +237,7 @@ func CommitGroup(groupName, commitMessage string) error {
 func GetCommitList(filePath string) error {
 
 	// Get tracker details
-	tracker, _, err := tr.GetTracker(0)
+	tracker, _, err := tr.GetTracker(tr.FileTrackerType)
 	if err != nil {
 		return err
 	}
@@ -262,7 +263,7 @@ func GetCommitList(filePath string) error {
 func GetGroupCommitList(groupName string) error {
 
 	// Get group tracker
-	_, groupTracker, err := tr.GetTracker(1)
+	_, groupTracker, err := tr.GetTracker(tr.GroupTrackerType)
 	if err != nil {
 		return err
 	}
@@ -292,7 +293,7 @@ func GetGroupCommitList(groupName string) error {
 func CurrentCommit(filePath string) error {
 
 	// Get tracker details
-	tracker, _, err := tr.GetTracker(0)
+	tracker, _, err := tr.GetTracker(tr.FileTrackerType)
 	if err != nil {
 		return err
 	}
@@ -332,7 +333,7 @@ func CurrentCommit(filePath string) error {
 func GroupCommitDetails(groupName string, commitNumber int) error {
 
 	// Get group tracker
-	_, groupTracker, err := tr.GetTracker(1)
+	_, groupTracker, err := tr.GetTracker(tr.GroupTrackerType)
 	if err != nil {
 		return err
 	}
@@ -383,7 +384,7 @@ func GroupCommitDetails(groupName string, commitNumber int) error {
 // Shows the names of groups tracked in the current repository
 func GroupNameList(filePath string) error {
 	// Get group tracker
-	_, groupTracker, err := tr.GetTracker(1)
+	_, groupTracker, err := tr.GetTracker(tr.GroupTrackerType)
 	if err != nil {
 		return err
 	}
@@ -395,7 +396,7 @@ func GroupNameList(filePath string) error {
 		}
 	} else {
 
-		tracker, _, err := tr.GetTracker(0)
+		tracker, _, err := tr.GetTracker(tr.FileTrackerType)
 		if err != nil {
 			return err
 		}

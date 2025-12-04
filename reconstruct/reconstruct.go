@@ -2,15 +2,21 @@ package reconstruct
 
 import (
 	"bufio"
+	"io"
+	"os"
+	"strconv"
+	"strings"
+
 	// bh "github.com/mainak55512/qwe/binaryhandler"
 	cp "github.com/mainak55512/qwe/compressor"
 	er "github.com/mainak55512/qwe/qwerror"
 	utl "github.com/mainak55512/qwe/qweutils"
 	tr "github.com/mainak55512/qwe/tracker"
-	"io"
-	"os"
-	"strconv"
-	"strings"
+)
+
+const (
+	LastVersion = -1 // Last version - all commits
+	BaseVersion = -2 // Only use base version, no commits
 )
 
 // Applies previous commits till the commitID supplied on to the base version
@@ -52,7 +58,7 @@ func Reconstruct(val tr.Tracker, target string, commitID int) error {
 	target_content.Close()
 
 	// if commitID is -2, that means only base varient is needed
-	if commitID == -2 {
+	if commitID == BaseVersion {
 		return nil
 	}
 
@@ -60,7 +66,7 @@ func Reconstruct(val tr.Tracker, target string, commitID int) error {
 	for i, elem := range val.Versions {
 
 		// Will stop if the specified commitID is reached; -1 means it will cover all versions
-		if commitID != -1 && i > commitID {
+		if commitID != LastVersion && i > commitID {
 			break
 		}
 

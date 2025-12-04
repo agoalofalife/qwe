@@ -78,7 +78,7 @@ func TestInit_SuccessfulInitialization(t *testing.T) {
 		t.Error(".qwe/_group_tracker.qwe file was not created")
 	}
 
-	_, _, err = tr.GetTracker(0)
+	_, _, err = tr.GetTracker(tr.FileTrackerType)
 
 	if err != nil {
 		t.Fatalf("failed to read tracker file: %v", err)
@@ -128,7 +128,7 @@ func TestGroupInit_SuccessfulInitialization(t *testing.T) {
 	}
 
 	// Verify group was added to group tracker
-	_, groupTracker, err := tr.GetTracker(1)
+	_, groupTracker, err := tr.GetTracker(tr.GroupTrackerType)
 	if err != nil {
 		t.Fatalf("failed to get group tracker: %v", err)
 	}
@@ -235,7 +235,7 @@ func TestGroupInit_MultipleGroups(t *testing.T) {
 	}
 
 	// Verify all groups exist in tracker
-	_, groupTracker, err := tr.GetTracker(1)
+	_, groupTracker, err := tr.GetTracker(tr.GroupTrackerType)
 	if err != nil {
 		t.Fatalf("failed to get group tracker: %v", err)
 	}

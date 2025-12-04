@@ -20,7 +20,7 @@ func Recover(filePath string) error {
 	}
 
 	// Get tracker details
-	tracker, _, err := tr.GetTracker(0)
+	tracker, _, err := tr.GetTracker(tr.FileTrackerType)
 	if err != nil {
 		return err
 	}
@@ -43,7 +43,7 @@ func Recover(filePath string) error {
 		}
 	} else {
 		// Reconstruct the file all the way to the latest version
-		if err = res.Reconstruct(val, target, -1); err != nil {
+		if err = res.Reconstruct(val, target, res.LastVersion); err != nil {
 			return err
 		}
 	}

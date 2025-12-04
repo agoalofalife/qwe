@@ -16,7 +16,7 @@ import (
 func Rebase(filePath string) error {
 
 	// Get tracker details
-	tracker, _, err := tr.GetTracker(0)
+	tracker, _, err := tr.GetTracker(tr.FileTrackerType)
 	if err != nil {
 		return err
 	}
@@ -36,7 +36,7 @@ func Rebase(filePath string) error {
 	}
 
 	// Reconstruct the file till its base version
-	if err = res.Reconstruct(val, filePath, -2); err != nil {
+	if err = res.Reconstruct(val, filePath, res.BaseVersion); err != nil {
 		return err
 	}
 

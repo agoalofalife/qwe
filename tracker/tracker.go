@@ -16,6 +16,12 @@ import (
 	utl "github.com/mainak55512/qwe/qweutils"
 )
 
+// Tracker type constants
+const (
+	FileTrackerType  = 0 // Individual file tracker (_tracker.qwe)
+	GroupTrackerType = 1 // Group tracker (_group_tracker.qwe)
+)
+
 type VersionDetails struct {
 	UID           string `json:"uid"`
 	CommitMessage string `json:"commit_message"`
@@ -68,9 +74,9 @@ func GetTracker(trackerType int) (TrackerSchema, GroupTrackerSchema, error) {
 	var trackerPath string
 
 	// 0 is associated with file tracker, 1 is associated with group tracker
-	if trackerType == 0 {
+	if trackerType == FileTrackerType {
 		trackerPath = ".qwe/_tracker.qwe"
-	} else if trackerType == 1 {
+	} else if trackerType == GroupTrackerType {
 		trackerPath = ".qwe/_group_tracker.qwe"
 	} else {
 		return nil, nil, er.InvalidTracker
@@ -93,7 +99,7 @@ func GetTracker(trackerType int) (TrackerSchema, GroupTrackerSchema, error) {
 		return nil, nil, er.TrackerAccessErr
 	} else {
 
-		if trackerType == 0 {
+		if trackerType == FileTrackerType {
 			// Parse the content of the tracker file
 			if err := json.Unmarshal(current_tracker, &tracker_schema); err != nil {
 				file.Close()
@@ -124,9 +130,9 @@ func SaveTracker(trackerType int, content []byte) error {
 	var trackerPath string
 
 	// 0 is associated with file tracker, 1 is associated with group tracker
-	if trackerType == 0 {
+	if trackerType == FileTrackerType {
 		trackerPath = ".qwe/_tracker.qwe"
-	} else if trackerType == 1 {
+	} else if trackerType == GroupTrackerType {
 		trackerPath = ".qwe/_group_tracker.qwe"
 	} else {
 		return er.InvalidTracker
@@ -160,7 +166,7 @@ func SaveTracker(trackerType int, content []byte) error {
 func StartTracking(filePath string) (string, error) {
 
 	// Get tracker details
-	tracker, _, err := GetTracker(0)
+	tracker, _, err := GetTracker(FileTrackerType)
 	if err != nil {
 		return "", er.InvalidFile
 	}
@@ -229,10 +235,15 @@ func StartTracking(filePath string) (string, error) {
 	}
 
 	// Update the tracker
-	if err = SaveTracker(0, marshalContent); err != nil {
+	if err = SaveTracker(FileTrackerType, marshalContent); err != nil {
 		return "", err
 	}
 	fmt.Println("Started tracking", filePath)
+
+	if err := UpdateTrackedFile(fileId, filePath); err != nil {
+		fmt.Printf("Warning: failed to update tracked files: %v\n", err)
+	}
+
 	return fileObjectId, nil
 }
 
@@ -240,7 +251,7 @@ func StartTracking(filePath string) (string, error) {
 func StartGroupTracking(groupName string, filePathList []string) error {
 
 	// Get tracker details
-	_, groupTracker, err := GetTracker(1)
+	_, groupTracker, err := GetTracker(GroupTrackerType)
 	if err != nil {
 		return err
 	}
@@ -279,7 +290,7 @@ func StartGroupTracking(groupName string, filePathList []string) error {
 	}
 
 	// Update the tracker
-	if err = SaveTracker(1, marshalContent); err != nil {
+	if err = SaveTracker(GroupTrackerType, marshalContent); err != nil {
 		return err
 	}
 	return nil
@@ -287,7 +298,7 @@ func StartGroupTracking(groupName string, filePathList []string) error {
 
 func fileTracker(filePath string, groupName string, groupTracker GroupTrackerSchema) (GroupTrackerSchema, error) {
 	// Get tracker details
-	tracker, _, err := GetTracker(0)
+	tracker, _, err := GetTracker(FileTrackerType)
 	if err != nil {
 		return groupTracker, err
 	}

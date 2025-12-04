@@ -23,7 +23,7 @@ func Revert(commitNumber int, filePath string) error {
 	}
 
 	// Get tracker details
-	tracker, _, err := tr.GetTracker(0)
+	tracker, _, err := tr.GetTracker(tr.FileTrackerType)
 	if err != nil {
 		return err
 	}
@@ -63,7 +63,7 @@ func Revert(commitNumber int, filePath string) error {
 
 		// Update the current version of the file in tracker
 		// if commitID is -1 that means reverted back to latest commit
-		if commitNumber == -1 {
+		if commitNumber == res.LastVersion {
 			commitNumber = len(val.Versions) - 1
 		}
 		val.Current = val.Versions[commitNumber].UID
@@ -86,7 +86,7 @@ func Revert(commitNumber int, filePath string) error {
 func RevertGroup(groupName string, commitID int) error {
 
 	// Get group tracker
-	_, groupTracker, err := tr.GetTracker(1)
+	_, groupTracker, err := tr.GetTracker(tr.GroupTrackerType)
 	if err != nil {
 		return err
 	}

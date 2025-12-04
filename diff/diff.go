@@ -32,7 +32,7 @@ func Diff(filePath, commitID1Str, commitID2Str string) error {
 	}
 
 	// Get details from _tracker.qwe
-	tracker, _, err := tr.GetTracker(0)
+	tracker, _, err := tr.GetTracker(tr.FileTrackerType)
 	if err != nil {
 		return err
 	}

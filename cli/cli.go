@@ -8,7 +8,6 @@ import (
 
 	cm "github.com/mainak55512/qwe/commit"
 	"github.com/mainak55512/qwe/diff"
-	"github.com/mainak55512/qwe/display"
 	in "github.com/mainak55512/qwe/initializer"
 	er "github.com/mainak55512/qwe/qwerror"
 	rb "github.com/mainak55512/qwe/rebase"
@@ -118,13 +117,13 @@ func HandleArgs() error {
 					return err
 				}
 			}
-		case "files":
+		case "tracked":
 			{
 				if len(command_list) != 1 {
 					return er.CLIInitErr
 				}
 
-				if err := display.PrintTrackedFiles(); err != nil {
+				if err := tr.PrintTrackedFiles(); err != nil {
 					return err
 				}
 			}
